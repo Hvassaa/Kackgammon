@@ -11,16 +11,19 @@ class Game
 		Player redPlayer = Player("Red");
 		Player blackPlayer = Player("Black");
 		Player * playerInTurn;
+		Player * nextPlayer;
 		int board [24] = {0};
 		int numberOfBricks = 7;
 	public:
 		Game();
 		Player getPlayerInTurn();
+		Player getNextPlayer();
 		bool movePiece(int from, int to);
 		bool validMove(int from, int to);
 		int getPiecesAt(int pos);
 		void decreasePiecesAt(int pos);
 		void increasePiecesAt(int pos);
+		void pieceKilledAt(int pos);
 		Player * getWinner();
 		void checkForWonGame();
 		void rollDice();

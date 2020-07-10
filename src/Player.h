@@ -11,6 +11,8 @@ class Player
 		std::string getPlayerColor();
 		int getFinishedPieces();
 		int getDeadPieces();
+		void incrementDeadPieces();
+		void decrementDeadPieces();
 		void finishPiece();
 		bool isAllPiecesHome(int board[]);
 };

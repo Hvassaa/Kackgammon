@@ -7,6 +7,10 @@ Game::Game()
 {
 	// set playerInTurn as pointer to redPlayer, so redPlayer starts
 	playerInTurn = & redPlayer;
+
+	// set nextPlayer as pointer to blackPlayer
+	nextPlayer = & blackPlayer;
+
 	// set up the board
 	board[0] = 2;    
 	board[23] = -2;    
@@ -27,11 +31,19 @@ Game::Game()
 	rollDice();
 }
 
+// return the player in turn
 Player Game::getPlayerInTurn() 
 {
 	return * playerInTurn;
 }
 
+// return the next player
+Player Game::getNextPlayer()
+{
+	return * nextPlayer;
+}
+
+// check if a move between "from" and "to" is valid
 bool Game::validMove(int from, int to)
 {
 	// if outside the board
@@ -75,6 +87,7 @@ bool Game::validMove(int from, int to)
 	return true;
 }
 
+// move a piece from -> to
 bool Game::movePiece(int from, int to)
 {
 	bool valid = validMove(from, to);
@@ -88,9 +101,11 @@ bool Game::movePiece(int from, int to)
 		if(getPiecesAt(from) > 0) 
 		{
 			// red
+
+			// enemy piece at to
 			if(getPiecesAt(to) == -1)
 			{
-				board[to] = 0;
+				pieceKilledAt(to);
 			}
 			board[from] = board[from] - 1;
 			board[to] = board[to] + 1;
@@ -98,9 +113,11 @@ bool Game::movePiece(int from, int to)
 		else if(getPiecesAt(from) > 0) 
 		{
 			// black
-				if(getPiecesAt(to) == 1)
+
+			// enemy piece at to
+			if(getPiecesAt(to) == 1)
 			{
-				board[to] = 0;
+				pieceKilledAt(to);
 			}
 			board[from] = board[from] + 1;
 			board[to] = board[to] - 1;
@@ -110,11 +127,48 @@ bool Game::movePiece(int from, int to)
 	return valid;
 }
 
+// kill piece at pos
+void Game::pieceKilledAt(int pos)
+{
+	board[pos] = 0;
+	(* nextPlayer).incrementDeadPieces();
+}
+
 int Game::getPiecesAt(int pos)
 {
 	return board[pos];
 }
 
+// increment pieces at pos, works for both red and black
+void Game::increasePiecesAt(int pos)
+{
+	std::string colorInTurn = getPlayerInTurn().getPlayerColor();
+	if(colorInTurn == "Red")
+	{
+		board[pos] = board[pos] + 1;
+	}
+	else
+	{
+		board[pos] = board[pos] - 1;
+	}
+}
+
+// decrement pieces at pos, works for both red and black
+void Game::decreasePiecesAt(int pos)
+{
+	std::string colorInTurn = getPlayerInTurn().getPlayerColor();
+	if(colorInTurn == "Red")
+	{
+		board[pos] = board[pos] - 1;
+	}
+	else
+	{
+		board[pos] = board[pos] + 1;
+	}
+}
+
+// return a pointer to the winning player
+// if noone has won, returns nullptr
 Player * Game::getWinner()
 {
 	if(redPlayer.getFinishedPieces() == numberOfBricks) 
@@ -130,6 +184,7 @@ Player * Game::getWinner()
 	return nullptr;
 }
 
+// check if a player has won, and if so, terminate the program
 void Game::checkForWonGame()
 {
 	if(getWinner() != nullptr)
@@ -139,6 +194,7 @@ void Game::checkForWonGame()
 	}
 }
 
+// roll both dice
 void Game::rollDice()
 {
 	d1.rollDie();
@@ -155,11 +211,13 @@ Die Game::getDie2()
 	return d2;
 }
 
+// check for legal player change
 bool Game::validPlayerChange()
 {
 	return d1.isUsed() && d2.isUsed();
 }
 
+// change player / finish round
 bool Game::changePlayer()
 {
 	bool validChange = validPlayerChange();
@@ -169,10 +227,12 @@ bool Game::changePlayer()
 		if(getPlayerInTurn().getPlayerColor() == "Red")
 		{
 			playerInTurn = &blackPlayer;
+			nextPlayer = &redPlayer;
 		}
 		else
 		{
 			playerInTurn = &redPlayer;
+			nextPlayer = &blackPlayer;
 		}
 	}
 	return validChange;
