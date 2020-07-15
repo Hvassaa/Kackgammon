@@ -4,10 +4,10 @@
 
 int main(int argc, const char * argv[]) {
 	std::cout << std::boolalpha;
-	int debug = 0;
+	int debug = 1;
 	Game game;
 
-	if(debug > 0)
+	if(debug > 10)
 	{
 		std::cout << "Number of args to program: " << argc << std::endl;
 		std::cout << "Player starting: " << game.getPlayerInTurn().getPlayerColor() << std::endl;
@@ -19,6 +19,10 @@ int main(int argc, const char * argv[]) {
 	while(true)
 	{
 		game.printBoard();
+		if(debug > 0)
+		{
+			game.validMoveExists();
+		}
 
 		std::cin >> input;
 		switch (input) {
@@ -35,6 +39,7 @@ int main(int argc, const char * argv[]) {
 				std::cout << "Move succeeded: " << game.movePiece(fromPos, toPos) << std::endl;
 				break;
 			case 'n':
+				game.changePlayer();
 				// next turn
 				break;
 			default:

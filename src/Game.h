@@ -34,4 +34,5 @@ class Game
 		// REMOVE AT SOME POINT
 		void printBoard();
 		void printSpaces(int p);
+		bool validMoveExists();
 };

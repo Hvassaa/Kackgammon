@@ -46,18 +46,23 @@ Player Game::getNextPlayer()
 // check if a move between "from" and "to" is valid
 bool Game::validMove(int from, int to)
 {
-	// if outside the board
-	if(!(from >= 0 && from <= 23 && to >= 0 && to <= 23)) {return false;}
+	int difference = from - to;
+	bool die1Check = d1.getEyes() == abs(difference) && !d1.isUsed();
+	bool die2Check = d2.getEyes() == abs(difference) && !d2.isUsed();
+	if( !(die1Check || die2Check) ) {return false;}
+
+	// if moving outside the board (-1 and 24 means finished) 
+	//if(!(from >= 0 && from <= 23 && to >= 0 && to <= 23)) {return false;}
+	if(!(from >= 0 && from <= 23 && to >= -1 && to <= 24)) {return false;}
+
+	// check that the player in turn can finish piece
+	if(to == -1 && getPlayerInTurn().getPlayerColor() != "Black") {return false;}
+	if(to == 24 && getPlayerInTurn().getPlayerColor() != "Red") {return false;}
 
 	// if no piece at from
 	if(getPiecesAt(from) == 0) {return false;}
 
 	std::string inTurnInColor = getPlayerInTurn().getPlayerColor();
-
-	int difference = from - to;
-	bool die1Check = d1.getEyes() == abs(difference) && !d1.isUsed();
-	bool die2Check = d2.getEyes() == abs(difference) && !d2.isUsed();
-	if( !(die1Check || die2Check) ) {return false;}
 
 	// compare player in turn's color
 	// if red, do if
@@ -68,7 +73,7 @@ bool Game::validMove(int from, int to)
 		// if trying to move other players piece
 		if(getPiecesAt(from) < 0) {return false;}
 		// if more than 1 enemy piece at to 
-		if(getPiecesAt(to) < -1) {return false;}
+		if(to != 24 && getPiecesAt(to) < -1) {return false;}
 		// right move-direction / move more than 0
 		// difference for red should be in ~ [-infty, -1)
 		if(difference > -1) {return false;}
@@ -79,7 +84,7 @@ bool Game::validMove(int from, int to)
 		// if trying to move other players piece
 		if(getPiecesAt(from) > 0) {return false;}
 		// if more than 1 enemy piece at to 
-		if(getPiecesAt(to) > 1) {return false;}
+		if(to != -1 && getPiecesAt(to) > 1) {return false;}
 		// right move-direction / move more than 0
 		// difference for black should be in ~ [1, infty) 
 		if(difference < 1) {return false;}
@@ -238,6 +243,55 @@ bool Game::changePlayer()
 	return validChange;
 }
 
+bool Game::validMoveExists()
+{
+	if(d1.isUsed() && d2.isUsed()) {return false;}
+
+	int start, end, moveDirection;
+
+	if(getPlayerInTurn().getPlayerColor() == "Red")
+	{
+		start = 0;
+		end = 24;
+		moveDirection = 1;
+	}
+	else
+	{
+		start = 23;
+		end = -1;
+		moveDirection = -1;
+	}
+
+	// Debug output
+	std::cout << "Start : " << start << ", end: " << end << ", md: " << moveDirection << std::endl;
+
+	for(int i = start; i != end; i = i + moveDirection)
+	{
+		int piecesAtIPos = getPiecesAt(i);
+		// fancy check if there's a piece for the right player by something like (-7/7 = -1) and (7/7 = 1)
+		if(piecesAtIPos / abs(piecesAtIPos) == moveDirection)
+		{
+			int toPos1 = i + (d1.getEyes() * moveDirection);
+			bool validWithDie1 = validMove(i, toPos1);
+			// Debug output
+			std::cout << "vd1: " << validWithDie1 << " -- from: " << i << ", to: " << toPos1 << std::endl;
+			if(!d1.isUsed() && validWithDie1)
+			{
+				return true;
+			}
+			int toPos2 = i + (d2.getEyes() * moveDirection);
+			bool validWithDie2 = validMove(i, toPos2);
+			// Debug output
+			std::cout << "vd2: " << validWithDie2 << " -- from: " << i << ", to: " << toPos2 << std::endl;
+			if(!d2.isUsed() && validWithDie2)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 // FUNCTIONS TO PRINT; HOPEFULLY TEMPORARY; START
 
 /*
@@ -249,6 +303,9 @@ bool Game::changePlayer()
  * and finally numbers indicating the "cell" again
  */
 void Game::printBoard() {
+	// BAD BAD UNIX ONLY
+	system("clear");
+	std::cout << "Player in turn: " << getPlayerInTurn().getPlayerColor() << std::endl;
 	for(int i = 0; i < 12; i = i + 1) {
 		std::cout << i;
 		if(i >= 10) {std::cout << "   ";}
@@ -274,8 +331,8 @@ void Game::printBoard() {
 	for(int i = 23; i >= 12; i = i - 1) {
 		std::cout << i << "   ";
 	}
-	std::cout << "d1: " << d1.getEyes() << " (used: " << d1.isUsed() << "), d2: " 
-		<< d2.getEyes() << " (used: " << d2.isUsed() << ")" << std::endl;
+	std::cout << std::endl << "d1: " << d1.getEyes() << " (used: " << d1.isUsed() 
+		<< "), d2: " << d2.getEyes() << " (used: " << d2.isUsed() << ")" << std::endl;
 }
 
 // shitty utility function
