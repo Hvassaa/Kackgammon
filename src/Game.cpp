@@ -115,7 +115,7 @@ bool Game::movePiece(int from, int to)
 			board[from] = board[from] - 1;
 			board[to] = board[to] + 1;
 		}
-		else if(getPiecesAt(from) > 0) 
+		else if(getPiecesAt(from) < 0) 
 		{
 			// black
 
@@ -219,7 +219,10 @@ Die Game::getDie2()
 // check for legal player change
 bool Game::validPlayerChange()
 {
-	return d1.isUsed() && d2.isUsed();
+	// if there exists a valid move
+	// you have to do it! 
+	return !validMoveExists();
+	//return d1.isUsed() && d2.isUsed();
 }
 
 // change player / finish round
