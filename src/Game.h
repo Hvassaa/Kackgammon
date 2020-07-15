@@ -35,4 +35,5 @@ class Game
 		void printBoard();
 		void printSpaces(int p);
 		bool validMoveExists();
+		void finishPieceAt(int pos);
 };

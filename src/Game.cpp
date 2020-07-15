@@ -107,29 +107,55 @@ bool Game::movePiece(int from, int to)
 		{
 			// red
 
+			// piece is finished
+			if(to == 24)
+			{
+				finishPieceAt(from);
+			}
+
 			// enemy piece at to
 			if(getPiecesAt(to) == -1)
 			{
 				pieceKilledAt(to);
 			}
+			decreasePiecesAt(from);
+			increasePiecesAt(to);
+			/*
 			board[from] = board[from] - 1;
 			board[to] = board[to] + 1;
+			*/
 		}
 		else if(getPiecesAt(from) < 0) 
 		{
 			// black
+
+			// piece is finished
+			if(to == -1)
+			{
+				finishPieceAt(from);
+			}
 
 			// enemy piece at to
 			if(getPiecesAt(to) == 1)
 			{
 				pieceKilledAt(to);
 			}
+			decreasePiecesAt(from);
+			increasePiecesAt(to);
+			/*
 			board[from] = board[from] + 1;
 			board[to] = board[to] - 1;
+			*/
 		}
 		checkForWonGame();
 	}
 	return valid;
+}
+
+void Game::finishPieceAt(int pos)
+{
+	decreasePiecesAt(pos);
+	getPlayerInTurn().finishPiece();
 }
 
 // kill piece at pos
