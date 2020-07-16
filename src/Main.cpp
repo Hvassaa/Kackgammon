@@ -1,10 +1,19 @@
+#include <exception>
 #include <iostream>
 #include <string>
 #include "Game.h"
 
 int main(int argc, const char * argv[]) {
+	// BAD BAD UNIX ONLY
+	system("clear");
+
 	std::cout << std::boolalpha;
 	int debug = 1;
+	if(argc > 1)
+	{
+		debug = atoll(argv[1]);
+	}
+
 	Game game;
 
 	if(debug > 10)
@@ -14,10 +23,11 @@ int main(int argc, const char * argv[]) {
 	}
 
 	char input;
-	int fromPos;
-	int toPos;
+	std::string fromPos;
+	std::string toPos;
 	while(true)
 	{
+		std::cout << "DEBUG LEVEL: " << debug << std::endl;
 		game.printBoard();
 		if(debug > 0)
 		{
@@ -36,7 +46,13 @@ int main(int argc, const char * argv[]) {
 				std::cin >> fromPos;
 				std::cout << "Move to: ";
 				std::cin >> toPos;
-				std::cout << "Move succeeded: " << game.movePiece(fromPos, toPos) << std::endl;
+				try {
+					bool moveSucceded = game.movePiece(std::stoi(fromPos), std::stoi(toPos));
+					std::cout << "Move succeeded: " << moveSucceded << std::endl;
+				}
+				catch(std::exception& e) {
+					// break, but we already do
+				}
 				break;
 			case 'n':
 				game.changePlayer();
@@ -45,5 +61,7 @@ int main(int argc, const char * argv[]) {
 			default:
 				std::cout << "Unknown input" << std::endl;
 		}
+	// BAD BAD UNIX ONLY
+	system("clear");
 	}
 }

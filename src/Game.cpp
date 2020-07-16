@@ -46,6 +46,50 @@ Player Game::getNextPlayer()
 // check if a move between "from" and "to" is valid
 bool Game::validMove(int from, int to)
 {
+	std::string inTurnInColor = getPlayerInTurn().getPlayerColor();
+
+	// resurrect dead pieces before moving other pieces
+	if(getPlayerInTurn().getDeadPieces() != 0)
+	{
+		int resurrectPosDie1;
+		int resurrectPosDie2;
+		if(inTurnInColor == "Red")
+		{
+			resurrectPosDie1 = d1.getEyes() - 1;
+			resurrectPosDie2 = d2.getEyes() - 1;
+			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+			{
+				getPlayerInTurn().decrementDeadPieces();
+				increasePiecesAt(resurrectPosDie1);
+				return true;
+			}
+			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+			{
+				getPlayerInTurn().decrementDeadPieces();
+				increasePiecesAt(resurrectPosDie2);
+				return true;
+			}
+		}
+		else
+		{
+			resurrectPosDie1 = 24 - d1.getEyes();
+			resurrectPosDie2 = 24 - d2.getEyes();
+			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+			{
+				getPlayerInTurn().decrementDeadPieces();
+				increasePiecesAt(resurrectPosDie1);
+				return true;
+			}
+			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+			{
+				getPlayerInTurn().decrementDeadPieces();
+				increasePiecesAt(resurrectPosDie2);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	int difference = from - to;
 	bool die1Check = d1.getEyes() == abs(difference) && !d1.isUsed();
 	bool die2Check = d2.getEyes() == abs(difference) && !d2.isUsed();
@@ -61,8 +105,6 @@ bool Game::validMove(int from, int to)
 
 	// if no piece at from
 	if(getPiecesAt(from) == 0) {return false;}
-
-	std::string inTurnInColor = getPlayerInTurn().getPlayerColor();
 
 	// compare player in turn's color
 	// if red, do if
@@ -98,6 +140,49 @@ bool Game::movePiece(int from, int to)
 	bool valid = validMove(from, to);
 	if(valid)
 	{
+		// resurrect dead pieces (should probably be 
+		// merged into a method for use in both
+		// movePiece and validMove)
+		if(getPlayerInTurn().getDeadPieces() != 0)
+		{
+			int resurrectPosDie1;
+			int resurrectPosDie2;
+			if(getPlayerInTurn().getPlayerColor() == "Red")
+			{
+				resurrectPosDie1 = d1.getEyes() - 1;
+				resurrectPosDie2 = d2.getEyes() - 1;
+				if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+				{
+					getPlayerInTurn().decrementDeadPieces();
+					increasePiecesAt(resurrectPosDie1);
+					d1.setUsed();
+				}
+				if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+				{
+					getPlayerInTurn().decrementDeadPieces();
+					increasePiecesAt(resurrectPosDie2);
+					d2.setUsed();
+				}
+			}
+			else
+			{
+				resurrectPosDie1 = 24 - d1.getEyes();
+				resurrectPosDie2 = 24 - d2.getEyes();
+				if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+				{
+					getPlayerInTurn().decrementDeadPieces();
+					increasePiecesAt(resurrectPosDie1);
+					d1.setUsed();
+				}
+				if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+				{
+					getPlayerInTurn().decrementDeadPieces();
+					increasePiecesAt(resurrectPosDie2);
+					d2.setUsed();
+				}
+			}
+		}
+
 		// "use" die
 		int diff = abs(from - to);
 		if(d1.getEyes() == diff && !d1.isUsed()) {d1.setUsed();}
@@ -332,8 +417,6 @@ bool Game::validMoveExists()
  * and finally numbers indicating the "cell" again
  */
 void Game::printBoard() {
-	// BAD BAD UNIX ONLY
-	system("clear");
 	std::cout << "Player in turn: " << getPlayerInTurn().getPlayerColor() << std::endl;
 	for(int i = 0; i < 12; i = i + 1) {
 		std::cout << i;
