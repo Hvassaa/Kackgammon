@@ -6,16 +6,15 @@ set(TARGET ${PROJECT_NAME})
 set(PROJECT_HEADERS
 	src/Die.h
 	src/Player.h
-	src/Die.h)
+	src/Die.h
+	src/Gui.h)
 
 set(PROJECT_SOURCES
 	src/Main.cpp 
 	src/Die.cpp 
-	src/Die.h
 	src/Player.cpp 
-	src/Player.h
 	src/Game.cpp
-	src/Game.h)
+	src/Gui.cpp)
 
 # for QT
 set(CMAKE_AUTOMOC ON)
@@ -29,7 +28,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # taget executable
 add_executable(${TARGET})
-target_sources(${TARGET} PRIVATE ${PROJECT_SOURCES})
+target_sources(${TARGET} PRIVATE ${PROJECT_HEADERS} ${PROJECT_SOURCES})
 
 if(MSVC)
 	target_compile_options(${TARGET} PRIVATE /W4 /WX)
