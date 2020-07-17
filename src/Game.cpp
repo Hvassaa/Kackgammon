@@ -59,14 +59,10 @@ bool Game::validMove(int from, int to)
 			resurrectPosDie2 = d2.getEyes() - 1;
 			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
 			{
-				getPlayerInTurn().decrementDeadPieces();
-				increasePiecesAt(resurrectPosDie1);
 				return true;
 			}
 			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
 			{
-				getPlayerInTurn().decrementDeadPieces();
-				increasePiecesAt(resurrectPosDie2);
 				return true;
 			}
 		}
@@ -76,14 +72,10 @@ bool Game::validMove(int from, int to)
 			resurrectPosDie2 = 24 - d2.getEyes();
 			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
 			{
-				getPlayerInTurn().decrementDeadPieces();
-				increasePiecesAt(resurrectPosDie1);
 				return true;
 			}
 			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
 			{
-				getPlayerInTurn().decrementDeadPieces();
-				increasePiecesAt(resurrectPosDie2);
 				return true;
 			}
 		}
@@ -382,7 +374,7 @@ bool Game::validMoveExists()
 	}
 
 	// Debug output
-	std::cout << "Start : " << start << ", end: " << end << ", md: " << moveDirection << std::endl;
+	//std::cout << "Start : " << start << ", end: " << end << ", md: " << moveDirection << std::endl;
 
 	for(int i = start; i != end; i = i + moveDirection)
 	{

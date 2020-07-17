@@ -28,12 +28,14 @@ int main(int argc, const char * argv[]) {
 	while(true)
 	{
 		std::cout << "DEBUG LEVEL: " << debug << std::endl;
+		std::cout << "q: quit, m: move, n: next player" << std::endl;
 		game.printBoard();
 		if(debug > 0)
 		{
 			game.validMoveExists();
 		}
 
+		std::cout << "Command: ";
 		std::cin >> input;
 		switch (input) {
 			case 'q':
