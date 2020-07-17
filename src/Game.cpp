@@ -315,6 +315,11 @@ void Game::rollDice()
 {
 	d1.rollDie();
 	d2.rollDie();
+	if(d1.getEyes() == d2.getEyes())
+	{
+		d1.setAsDoubleRoll();
+		d2.setAsDoubleRoll();
+	}
 }
 
 Die Game::getDie1()
@@ -389,7 +394,7 @@ bool Game::validMoveExists()
 			bool validWithDie1 = validMove(i, toPos1);
 			// Debug output
 			std::cout << "vd1: " << validWithDie1 << " -- from: " << i << ", to: " << toPos1 << std::endl;
-			if(!d1.isUsed() && validWithDie1)
+			if((!d1.isUsed() || d1.isUnusedDouble()) && validWithDie1)
 			{
 				return true;
 			}
@@ -397,7 +402,7 @@ bool Game::validMoveExists()
 			bool validWithDie2 = validMove(i, toPos2);
 			// Debug output
 			std::cout << "vd2: " << validWithDie2 << " -- from: " << i << ", to: " << toPos2 << std::endl;
-			if(!d2.isUsed() && validWithDie2)
+			if((!d2.isUsed() || d2.isUnusedDouble()) && validWithDie2)
 			{
 				return true;
 			}

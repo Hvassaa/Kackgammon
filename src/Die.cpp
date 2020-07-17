@@ -6,6 +6,7 @@ Die::Die()
 {
 	eyes = 0;
 	used = false;
+	isDoubleRoll = false;
 }
 
 int Die::getEyes()
@@ -25,7 +26,24 @@ void Die::setUnused()
 
 void Die::setUsed()
 {
-	used = true;
+	if(isDoubleRoll)
+	{
+		isDoubleRoll = false;
+	}
+	else
+	{
+		used = true;
+	}
+}
+
+void Die::setAsDoubleRoll()
+{
+	isDoubleRoll = true;
+}
+
+bool Die::isUnusedDouble()
+{
+	return isDoubleRoll;
 }
 
 // this method relies on a random seed already being set
