@@ -7,14 +7,14 @@ set(PROJECT_HEADERS
 	src/Die.h
 	src/Player.h
 	src/Die.h
-	src/Gui.h)
+	src/MainWindow.h)
 
 set(PROJECT_SOURCES
 	src/Main.cpp 
 	src/Die.cpp 
 	src/Player.cpp 
 	src/Game.cpp
-	src/Gui.cpp)
+	src/MainWindow.cpp)
 
 # for QT
 set(CMAKE_AUTOMOC ON)
