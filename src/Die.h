@@ -2,15 +2,11 @@ class Die
 {
 	private:
 		int eyes;
-		bool used;
-		bool isDoubleRoll;
+		bool unused;
 	public:
 		Die();
 		int getEyes();
-		bool isUsed();
-		void setUsed();
-		void setUnused();
-		void setAsDoubleRoll();
-		void rollDie();
-		bool isUnusedDouble();
+		bool isUnused();
+		void roll();
+		void use();
 };
