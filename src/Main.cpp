@@ -18,20 +18,9 @@ int main(int argc, char * argv[])
 	std::cout << "Qt version: " << qVersion() << std::endl;
 	if(argc == 1) 
 	{
-
 		QApplication app(argc, argv);
-
 		MainWindow mainWindow;
 		mainWindow.buildWindow();
-		/*
-		QLabel * label = new QLabel("HEY");
-		mainWindow.resize(250, 150);
-		mainWindow.setWindowTitle("SUPER WINDOW");
-		QVBoxLayout * vBoxLayout = new QVBoxLayout;
-		vBoxLayout->addWidget(label);
-		mainWindow.setLayout(vBoxLayout);
-		mainWindow.show();
-		*/
 		return app.exec();
 	}
 	else

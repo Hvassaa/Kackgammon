@@ -48,6 +48,9 @@ bool Game::validMove(int from, int to)
 {
 	std::string inTurnInColor = getPlayerInTurn().getPlayerColor();
 
+	// dont move to "dead's" position
+	if(to == -1 || to == 24) {return false;}
+
 	// resurrect dead pieces before moving other pieces
 	if(getPlayerInTurn().getDeadPieces() != 0)
 	{
@@ -55,26 +58,28 @@ bool Game::validMove(int from, int to)
 		int resurrectPosDie2;
 		if(inTurnInColor == "Red")
 		{
+			if(from != -1) {return false;}
 			resurrectPosDie1 = d1.getEyes() - 1;
 			resurrectPosDie2 = d2.getEyes() - 1;
-			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0 && to == resurrectPosDie1) 
 			{
 				return true;
 			}
-			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0 && to == resurrectPosDie2) 
 			{
 				return true;
 			}
 		}
 		else
 		{
+			if(from != 24) {return false;}
 			resurrectPosDie1 = 24 - d1.getEyes();
 			resurrectPosDie2 = 24 - d2.getEyes();
-			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+			if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) <= 0 && to == resurrectPosDie1) 
 			{
 				return true;
 			}
-			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+			if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) <= 0 && to == resurrectPosDie2) 
 			{
 				return true;
 			}
@@ -83,17 +88,20 @@ bool Game::validMove(int from, int to)
 	}
 
 	int difference = from - to;
-	bool die1Check = d1.getEyes() == abs(difference) && !d1.isUsed();
+	bool reviveWithDie1 = getPlayerInTurn().getPlayerColor() == "Red" && from == -1 && from + d1.getEyes() == to && (!d1.isUsed() || d1.isUnusedDouble());
+	bool die1Check = (d1.getEyes() == abs(difference) && !d1.isUsed()) || reviveWithDie1;
 	bool die2Check = d2.getEyes() == abs(difference) && !d2.isUsed();
 	if( !(die1Check || die2Check) ) {return false;}
 
-	// if moving outside the board (-1 and 24 means finished) 
+	// if moving outside the board 
+	// (-2 and 25 means finished) 
+	// (-1 and 24 means dead)
 	//if(!(from >= 0 && from <= 23 && to >= 0 && to <= 23)) {return false;}
-	if(!(from >= 0 && from <= 23 && to >= -1 && to <= 24)) {return false;}
+	if(!(((from >= 0 && from <= 23) || from == -1 || from == 24 ) && ((to >= 0 && to <= 23) || to == -2 || to == 25 ))) {return false;}
 
 	// check that the player in turn can finish piece
-	if(to == -1 && getPlayerInTurn().getPlayerColor() != "Black") {return false;}
-	if(to == 24 && getPlayerInTurn().getPlayerColor() != "Red") {return false;}
+	if(to == -2 && getPlayerInTurn().getPlayerColor() != "Black") {return false;}
+	if(to == 25 && getPlayerInTurn().getPlayerColor() != "Red") {return false;}
 
 	// if no piece at from
 	if(getPiecesAt(from) == 0) {return false;}
@@ -107,7 +115,7 @@ bool Game::validMove(int from, int to)
 		// if trying to move other players piece
 		if(getPiecesAt(from) < 0) {return false;}
 		// if more than 1 enemy piece at to 
-		if(to != 24 && getPiecesAt(to) < -1) {return false;}
+		if(to != 25 && getPiecesAt(to) < -1) {return false;}
 		// right move-direction / move more than 0
 		// difference for red should be in ~ [-infty, -1)
 		if(difference > -1) {return false;}
@@ -118,7 +126,7 @@ bool Game::validMove(int from, int to)
 		// if trying to move other players piece
 		if(getPiecesAt(from) > 0) {return false;}
 		// if more than 1 enemy piece at to 
-		if(to != -1 && getPiecesAt(to) > 1) {return false;}
+		if(to != -2 && getPiecesAt(to) > 1) {return false;}
 		// right move-direction / move more than 0
 		// difference for black should be in ~ [1, infty) 
 		if(difference < 1) {return false;}
@@ -143,34 +151,38 @@ bool Game::movePiece(int from, int to)
 			{
 				resurrectPosDie1 = d1.getEyes() - 1;
 				resurrectPosDie2 = d2.getEyes() - 1;
-				if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+				if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0 && to == resurrectPosDie1) 
 				{
 					getPlayerInTurn().decrementDeadPieces();
 					increasePiecesAt(resurrectPosDie1);
 					d1.setUsed();
+					return true;
 				}
-				if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+				if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0 && to == resurrectPosDie2) 
 				{
 					getPlayerInTurn().decrementDeadPieces();
 					increasePiecesAt(resurrectPosDie2);
 					d2.setUsed();
+					return true;
 				}
 			}
 			else
 			{
 				resurrectPosDie1 = 24 - d1.getEyes();
 				resurrectPosDie2 = 24 - d2.getEyes();
-				if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) >= 0) 
+				if(!d1.isUsed() && getPiecesAt(resurrectPosDie1) <= 0 && to == resurrectPosDie1) 
 				{
 					getPlayerInTurn().decrementDeadPieces();
 					increasePiecesAt(resurrectPosDie1);
 					d1.setUsed();
+					return true;
 				}
-				if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) >= 0) 
+				if(!d2.isUsed() && getPiecesAt(resurrectPosDie2) <= 0 && to == resurrectPosDie2) 
 				{
 					getPlayerInTurn().decrementDeadPieces();
 					increasePiecesAt(resurrectPosDie2);
 					d2.setUsed();
+					return true;
 				}
 			}
 		}
@@ -185,7 +197,7 @@ bool Game::movePiece(int from, int to)
 			// red
 
 			// piece is finished
-			if(to == 24)
+			if(to == 25)
 			{
 				finishPieceAt(from);
 			}
@@ -197,17 +209,13 @@ bool Game::movePiece(int from, int to)
 			}
 			decreasePiecesAt(from);
 			increasePiecesAt(to);
-			/*
-			board[from] = board[from] - 1;
-			board[to] = board[to] + 1;
-			*/
 		}
 		else if(getPiecesAt(from) < 0) 
 		{
 			// black
 
 			// piece is finished
-			if(to == -1)
+			if(to == -2)
 			{
 				finishPieceAt(from);
 			}
@@ -219,10 +227,6 @@ bool Game::movePiece(int from, int to)
 			}
 			decreasePiecesAt(from);
 			increasePiecesAt(to);
-			/*
-			board[from] = board[from] + 1;
-			board[to] = board[to] - 1;
-			*/
 		}
 		checkForWonGame();
 	}
@@ -362,12 +366,22 @@ bool Game::validMoveExists()
 
 	if(getPlayerInTurn().getPlayerColor() == "Red")
 	{
+		// resurrect dead pieces
+		if(getPlayerInTurn().getDeadPieces() > 0)
+		{
+			return (!d1.isUsed() && getPiecesAt(d1.getEyes() - 1) >= 0) || (!d2.isUsed() && getPiecesAt(d2.getEyes() - 1) >= 0);
+		}
 		start = 0;
 		end = 24;
 		moveDirection = 1;
 	}
 	else
 	{
+		// resurrect dead pieces
+		if(getPlayerInTurn().getDeadPieces() > 0)
+		{
+			return (!d1.isUsed() && getPiecesAt(24 - d1.getEyes()) <= 0) || (!d2.isUsed() && getPiecesAt(24 - d2.getEyes()) <= 0);
+		}
 		start = 23;
 		end = -1;
 		moveDirection = -1;
@@ -385,7 +399,7 @@ bool Game::validMoveExists()
 			int toPos1 = i + (d1.getEyes() * moveDirection);
 			bool validWithDie1 = validMove(i, toPos1);
 			// Debug output
-			std::cout << "vd1: " << validWithDie1 << " -- from: " << i << ", to: " << toPos1 << std::endl;
+			//std::cout << "vd1: " << validWithDie1 << " -- from: " << i << ", to: " << toPos1 << std::endl;
 			if((!d1.isUsed() || d1.isUnusedDouble()) && validWithDie1)
 			{
 				return true;
@@ -393,7 +407,7 @@ bool Game::validMoveExists()
 			int toPos2 = i + (d2.getEyes() * moveDirection);
 			bool validWithDie2 = validMove(i, toPos2);
 			// Debug output
-			std::cout << "vd2: " << validWithDie2 << " -- from: " << i << ", to: " << toPos2 << std::endl;
+			//std::cout << "vd2: " << validWithDie2 << " -- from: " << i << ", to: " << toPos2 << std::endl;
 			if((!d2.isUsed() || d2.isUnusedDouble()) && validWithDie2)
 			{
 				return true;
@@ -401,6 +415,16 @@ bool Game::validMoveExists()
 		}
 	}
 	return false;
+}
+
+int Game::getDeadRedPieces()
+{
+	return redPlayer.getDeadPieces();
+}
+
+int Game::getDeadBlackPieces()
+{
+	return blackPlayer.getDeadPieces();
 }
 
 // FUNCTIONS TO PRINT; HOPEFULLY TEMPORARY; START

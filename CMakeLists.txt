@@ -7,6 +7,7 @@ set(PROJECT_HEADERS
 	src/Die.h
 	src/Player.h
 	src/Die.h
+	src/IdPushButton.h
 	src/MainWindow.h)
 
 set(PROJECT_SOURCES
@@ -14,6 +15,7 @@ set(PROJECT_SOURCES
 	src/Die.cpp 
 	src/Player.cpp 
 	src/Game.cpp
+	src/IdPushButton.cpp
 	src/MainWindow.cpp)
 
 # for QT

@@ -31,9 +31,11 @@ class Game
 		Die getDie2();
 		bool validPlayerChange();
 		bool changePlayer();
+		bool validMoveExists();
+		void finishPieceAt(int pos);
+		int getDeadRedPieces();
+		int getDeadBlackPieces();
 		// REMOVE AT SOME POINT
 		void printBoard();
 		void printSpaces(int p);
-		bool validMoveExists();
-		void finishPieceAt(int pos);
 };
