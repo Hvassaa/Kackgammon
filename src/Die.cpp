@@ -1,6 +1,12 @@
 #include <cstdlib>
 #include "Die.h"
 
+Die::Die(int fixedEyes)
+{
+	eyes = fixedEyes;
+	unused = true;
+}
+
 int Die::getEyes()
 {
 	return eyes;
