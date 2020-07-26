@@ -5,6 +5,7 @@ set(TARGET ${PROJECT_NAME})
 
 set(PROJECT_HEADERS
 	src/Die.h
+	src/DieCup.h
 	src/Player.h
 	src/Die.h
 	src/IdPushButton.h
@@ -13,6 +14,7 @@ set(PROJECT_HEADERS
 set(PROJECT_SOURCES
 	src/Main.cpp 
 	src/Die.cpp 
+	src/DieCup.cpp
 	src/Player.cpp 
 	src/Game.cpp
 	src/IdPushButton.cpp
