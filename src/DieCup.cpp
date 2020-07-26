@@ -8,6 +8,7 @@ DieCup::DieCup()
 	srand((unsigned) time(0));
 	dice.push_back(Die());
 	dice.push_back(Die());
+	roll();
 }
 
 void DieCup::roll()
