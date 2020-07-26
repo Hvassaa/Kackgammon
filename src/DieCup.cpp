@@ -25,3 +25,16 @@ void DieCup::roll()
 		dice.push_back(Die(dice.at(0)));
 	}
 }
+
+bool DieCup::tryUseDieWithEyes(int eyes)
+{
+	for (Die &d : dice)
+	{
+		if(d.isUnused() && d.getEyes() == eyes)
+		{
+			d.use();
+			return true;
+		}
+	}
+	return false;
+}
