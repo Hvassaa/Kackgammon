@@ -6,7 +6,7 @@ class Die
 	public:
 		Die();
 		Die(int fixedEyes);
-		int getEyes();
+		int getEyes() const;
 		bool isUnused();
 		void roll();
 		void use();

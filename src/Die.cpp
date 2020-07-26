@@ -1,5 +1,11 @@
 #include <cstdlib>
+#include <iostream>
 #include "Die.h"
+
+Die::Die()
+{
+	roll();
+}
 
 Die::Die(int fixedEyes)
 {
@@ -7,7 +13,7 @@ Die::Die(int fixedEyes)
 	unused = true;
 }
 
-int Die::getEyes()
+int Die::getEyes() const
 {
 	return eyes;
 }
