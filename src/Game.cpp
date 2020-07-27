@@ -79,7 +79,7 @@ bool Game::tryMovePiece(int from, int to)
 	return false;
 }
 
-Tile Game::getTileAt(int position)
+BaseTile Game::getTileAt(int position)
 {
 	return map[position];
 }

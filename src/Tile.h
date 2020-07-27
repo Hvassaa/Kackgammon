@@ -1,17 +1,9 @@
-#include "Player.h"
-#include <memory>
+#include "BaseTile.h"
 
-class Tile
+class Tile : public BaseTile
 {
-	private:
-		int noOfPieces;
-		Player *owner;
 	public:
 		Tile();
 		Tile(int noOfStartingPieces, Player *p);
-		int getNoOfPieces();
-		void decrementNoOfPieces();
-		void incrementNoOfPieces();
-		Player *getOwner();
-		void setOwner(Player *p);
+		void decrementNoOfPieces() override;
 };

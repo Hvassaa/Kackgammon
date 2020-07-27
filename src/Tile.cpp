@@ -1,43 +1,14 @@
 #include "Tile.h"
 
-Tile::Tile()
-{
-	noOfPieces = 0;
-	owner = nullptr;
-}
+Tile::Tile() : BaseTile() {} 
 
-Tile::Tile(int noOfStartingPieces, Player *p)
-{
-	noOfPieces = noOfStartingPieces;
-	owner = p;
-}
-
-int Tile::getNoOfPieces()
-{
-	return noOfPieces;
-}
-
-void Tile::incrementNoOfPieces()
-{
-	noOfPieces = noOfPieces + 1;
-}
+Tile::Tile(int noOfStartingPieces, Player *p) : BaseTile(noOfStartingPieces, p) {} 
 
 void Tile::decrementNoOfPieces()
 {
-	noOfPieces = noOfPieces - 1;
-	// this good?
+	BaseTile::decrementNoOfPieces();
 	if(noOfPieces == 0)
 	{
 		owner = nullptr;
 	}
-}
-
-Player * Tile::getOwner()
-{
-	return owner;
-}
-
-void Tile::setOwner(Player *p)
-{
-	owner = p;
 }
