@@ -1,135 +1,85 @@
 #include "MainWindow.h"
 #include "IdPushButton.h"
+#include <QVBoxLayout>
 #include <iostream>
 #include <qboxlayout.h>
 #include <qlabel.h>
 #include <qobject.h>
+#include <qobjectdefs.h>
+#include <qpushbutton.h>
 #include <qwidget.h>
-#include <string>
 
-MainWindow::MainWindow()
+MainWindow::MainWindow() : diceLabel(new QLabel("", this))
 {
-	std::cout << "HELLO FROM MW" << std::endl;
-	guiFromPos = -2;
-	guiToPos = -2;
-	redDeadButton = new IdPushButton("0", -1);
-	blackDeadButton = new IdPushButton("0", 24);
-	QObject::connect(redDeadButton, SIGNAL(emitId(int)), this, SLOT(testPrint(int)));
-	QObject::connect(blackDeadButton, SIGNAL(emitId(int)), this, SLOT(testPrint(int)));
-	die1Label = new QLabel(QString::number(game.getDie1().getEyes()));
-	die2Label = new QLabel(QString::number(game.getDie2().getEyes()));
-	QString status = QString::fromStdString("Player in turn: ").append(QString::fromStdString(game.getPlayerInTurn().getPlayerColor()));
-	statusLabel = new QLabel(status);
-}
-
-void MainWindow::buildWindow()
-{
-
+	guiFromPos = -1;
+	guiToPos = -1;
 	// vertical box layout to hold the rows
-	QVBoxLayout * boardLayout = new QVBoxLayout;
-	boardLayout->setAlignment(Qt::AlignCenter);
+	QVBoxLayout *mainLayout = new QVBoxLayout(this);
+	mainLayout->setAlignment(Qt::AlignCenter);
 
-	QHBoxLayout * statusRow = new QHBoxLayout;
+	QHBoxLayout *statusRow = new QHBoxLayout;
 	statusRow->setAlignment(Qt::AlignCenter);
-	statusRow->addWidget(die1Label);
-	statusRow->addWidget(die2Label);
-	statusRow->addWidget(statusLabel);
-	boardLayout->addLayout(statusRow);
+	statusRow->addWidget(diceLabel);
+	updateDiceLabel();
+	mainLayout->addLayout(statusRow);
 
-	// the rows of the board
-	QHBoxLayout * row1Layout = new QHBoxLayout;
-	QHBoxLayout * row2Layout = new QHBoxLayout;
-	row1Layout->setAlignment(Qt::AlignCenter);
-	row2Layout->setAlignment(Qt::AlignCenter);
+	QHBoxLayout *topRow = new QHBoxLayout;
+	QHBoxLayout *bottomRow = new QHBoxLayout;
+	topRow->setAlignment(Qt::AlignCenter);
+	bottomRow->setAlignment(Qt::AlignCenter);
+	mainLayout->addLayout(topRow);
+	mainLayout->addLayout(bottomRow);
 
-	// add them to the board layout
-	boardLayout->addLayout(row1Layout);
-	boardLayout->addLayout(row2Layout);
-
-	// create the buttons, that represent pieces
-	row1Layout->addWidget(redDeadButton);
-	row2Layout->addWidget(blackDeadButton);
-
-	for(int i = 0; i < 24; i++)
+	for (int i = 0; i < 28; i++)
 	{
-		int pieceCount = game.getPiecesAt(i);
-		QString pieceCountString = QString::number(abs(pieceCount));
-		IdPushButton * posButton = new IdPushButton(pieceCountString, i);
-		posButton->setFlat(true);
-
-		QObject::connect(posButton, SIGNAL(emitId(int)), this, SLOT(testPrint(int)));
-
-		if(pieceCount > 0)
+		IdPushButton *button = new IdPushButton(QString::number(game.getTileAt(i).getNoOfPieces()), i, this);
+		QObject::connect(button, SIGNAL(emitId(int)), this, SLOT(receivePosition(int)));
+		positionButtons[i] = button;
+		if(i < 14)
 		{
-			posButton->setStyleSheet(redStyleSheet);
+			topRow->addWidget(button);
 		}
-		else if(pieceCount < 0)
+		else
 		{
-			posButton->setStyleSheet(blackStyleSheet);
+			bottomRow->addWidget(button);
 		}
-		positionButtons[i] = posButton;
-	}
-	for(int i = 0; i < 12; i++)
-	{
-		row1Layout->addWidget(positionButtons[i]);
-	}
-	for(int i = 23; i >= 12; i--)
-	{
-		row2Layout->addWidget(positionButtons[i]);
 	}
 
-	QWidget::setLayout(boardLayout);
 	QWidget::show();
 }
 
-void MainWindow::getMovePositionsFromInput(int pos)
+void MainWindow::updateDiceLabel()
 {
-	if(guiFromPos == -2)
+	QString diceString = "";
+	for (Die const &d : game.getDieCup().dice)
 	{
-		guiFromPos = pos;
+		diceString.append(QString::number(d.getEyes()));
+		diceString.append(" ");
 	}
-	else if(guiToPos == -2)
-	{
-		guiToPos = pos;
-		std::cout << game.movePiece(guiFromPos, guiToPos) << std::endl;
-		guiFromPos = -2;
-		guiToPos = -2;
-	}
-	game.changePlayer();
-	redrawBoard();
-}
-
-void MainWindow::testPrint(int id)
-{
-	std::cout << "BUTTON " << id << " RELEASED" << std::endl;
-	getMovePositionsFromInput(id);
+	diceLabel->setText(diceString);
 }
 
 void MainWindow::redrawBoard()
 {
-	for(int i = 0; i < 24; i++)
+	for (int i = 0; i < 28; i++)
 	{
-		int pieceCount = game.getPiecesAt(i);
-		QString pieceCountString = QString::number(abs(pieceCount));
-		IdPushButton * button = positionButtons[i];
-		button->setText(pieceCountString);
-		if(pieceCount > 0)
-		{
-			button->setStyleSheet(redStyleSheet);
-		}
-		else if(pieceCount < 0)
-		{
-			button->setStyleSheet(blackStyleSheet);
-		}
-		else
-		{
-			button->setStyleSheet(neutralStyleSheet);
-		}
+		positionButtons[i]->setText(QString::number(game.getTileAt(i).getNoOfPieces()));
 	}
-	redDeadButton->setText(QString::number(game.getDeadRedPieces()));
-	blackDeadButton->setText(QString::number(game.getDeadBlackPieces()));
-	die1Label->setText(QString::number(game.getDie1().getEyes()));
-	die2Label->setText(QString::number(game.getDie2().getEyes()));
-	std::string status = "Player in turn: " + game.getPlayerInTurn().getPlayerColor();
-	statusLabel->setText(QString::fromStdString(status));
+}
+
+void MainWindow::receivePosition(int position)
+{
+	std::cout << "BUTTON " << position << std::endl;
+	if(guiFromPos == -1)
+	{
+		guiFromPos = position;
+	} 
+	else if(guiToPos == -1)
+	{
+		guiToPos = position;
+		game.tryMovePiece(guiFromPos, guiToPos);
+		redrawBoard();
+		guiFromPos = -1;
+		guiToPos = -1;
+	}
 }
