@@ -9,7 +9,7 @@
 #include <qpushbutton.h>
 #include <qwidget.h>
 
-MainWindow::MainWindow() : diceLabel(new QLabel("", this))
+MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(new QLabel("", this))
 {
 	guiFromPos = -1;
 	guiToPos = -1;
@@ -21,7 +21,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this))
 	QHBoxLayout *statusRow = new QHBoxLayout;
 	statusRow->setAlignment(Qt::AlignCenter);
 	statusRow->addWidget(diceLabel);
-	updateDiceLabel();
+	statusRow->addWidget(playerInTurnLabel);
 	mainLayout->addLayout(statusRow);
 
 	QHBoxLayout *topRow = new QHBoxLayout;
@@ -76,6 +76,7 @@ void MainWindow::redrawBoard()
 		}
 	}
 	updateDiceLabel();
+	playerInTurnLabel->setText(QString::fromStdString(game.getPlayerInTurn().getPlayerColor()));
 }
 
 void MainWindow::receivePosition(int position)

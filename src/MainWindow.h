@@ -13,6 +13,7 @@ class MainWindow : public QWidget
 		int guiFromPos, guiToPos;
 		IdPushButton *positionButtons[28];
 		QLabel *diceLabel;
+		QLabel *playerInTurnLabel;
 		QString redStyleSheet = "IdPushButton { color : red; }";
 		QString blackStyleSheet = "IdPushButton { color : blue; }";
 		QString neutralStyleSheet = "IdPushButton { color : black; }";

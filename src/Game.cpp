@@ -88,3 +88,8 @@ DieCup Game::getDieCup() const
 {
 	return dieCup;
 }
+
+Player Game::getPlayerInTurn() const
+{
+	return *playerInTurn;
+}

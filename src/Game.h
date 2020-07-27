@@ -16,4 +16,5 @@ class Game
 		bool tryMovePiece(int from, int to);
 		BaseTile getTileAt(int position);
 		DieCup getDieCup() const;
+		Player getPlayerInTurn() const;
 };
