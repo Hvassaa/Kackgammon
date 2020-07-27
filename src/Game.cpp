@@ -10,6 +10,12 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	playerInTurn = &player1;
 
 	// set up the board
+	
+	for (int i = 0; i < 28; i++)
+	{
+		map[i] = Tile();
+	}
+
 	map[2] = Tile(2, &player1);
 	map[25] = Tile(2, &player2);
 
@@ -26,8 +32,8 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	map[0] = DeadTile(&player1);
 	map[27] = DeadTile(&player2);
 	//set the owner of Tiles for finished pieces
-	map[1] = FinishTile(&player1);
-	map[26] = FinishTile(&player2);
+	map[26] = FinishTile(&player1);
+	map[1] = FinishTile(&player2);
 }
  
 // try to move a piece between from and to, return indicates success
@@ -45,6 +51,9 @@ bool Game::tryMovePiece(int from, int to)
 	if(*playerInTurn == player2 && from - to <= 0) {return false;}
 
 	bool tryMove = false;
+	// this will be subtracted to the from-to difference
+	// since the dead tile is "one extra behind"
+	int movingFromDeadTileBoost = (from == 0 || from == 27) ? 1 : 0;
 
 	// if to is empty, try move
 	if(map[to].getOwner() == nullptr)
@@ -66,10 +75,25 @@ bool Game::tryMovePiece(int from, int to)
 
 	if(tryMove)
 	{
-		int needEyes = abs(from - to);
+		int needEyes = abs(from - to) - movingFromDeadTileBoost;
 		bool moveSuccess = (dieCup.tryUseDieWithEyes(needEyes));
 		if(moveSuccess)
 		{
+			// kill enemy if present
+			if(map[to].getOwner() != playerInTurn 
+				&& map[to].getNoOfPieces() == 1)
+			{
+				if(playerInTurn == &player1)
+				{
+					map[27].incrementNoOfPieces();
+				}
+				else 
+				{
+					map[0].incrementNoOfPieces();
+				}
+				map[to].decrementNoOfPieces();
+			}
+
 			map[from].decrementNoOfPieces();
 			map[to].incrementNoOfPieces();
 			map[to].setOwner(playerInTurn);
@@ -92,4 +116,19 @@ DieCup Game::getDieCup() const
 Player Game::getPlayerInTurn() const
 {
 	return *playerInTurn;
+}
+
+bool Game::changeTurn()
+{
+	if(playerInTurn == &player1)
+	{
+		playerInTurn = &player2;
+	}
+	else
+	{
+		playerInTurn = &player1;
+	}
+	dieCup.roll();
+
+	return false;
 }

@@ -18,4 +18,5 @@ class Game
 		BaseTile getTileAt(int position);
 		DieCup getDieCup() const;
 		Player getPlayerInTurn() const;
+		bool changeTurn();
 };

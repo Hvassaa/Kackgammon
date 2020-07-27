@@ -21,4 +21,5 @@ class MainWindow : public QWidget
 		void updateDiceLabel();
 	public slots:
 		void receivePosition(int position);
+		void nextTurnProxy();
 };

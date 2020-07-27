@@ -22,6 +22,11 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	statusRow->setAlignment(Qt::AlignCenter);
 	statusRow->addWidget(diceLabel);
 	statusRow->addWidget(playerInTurnLabel);
+
+	QPushButton *nextTurnButton = new QPushButton("Next", this);
+	QObject::connect(nextTurnButton, SIGNAL(released()), this, SLOT(nextTurnProxy()));
+	statusRow->addWidget(nextTurnButton);
+
 	mainLayout->addLayout(statusRow);
 
 	QHBoxLayout *topRow = new QHBoxLayout;
@@ -94,4 +99,12 @@ void MainWindow::receivePosition(int position)
 		guiFromPos = -1;
 		guiToPos = -1;
 	}
+}
+
+void MainWindow::nextTurnProxy()
+{
+	game.changeTurn();
+	guiFromPos = -1;
+	guiToPos = -1;
+	redrawBoard();
 }
