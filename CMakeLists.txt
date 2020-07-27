@@ -8,6 +8,7 @@ set(PROJECT_HEADERS
 	src/DieCup.h
 	src/Player.h
 	src/Tile.h
+	src/Game.h
 	src/IdPushButton.h
 	src/MainWindow.h)
 
