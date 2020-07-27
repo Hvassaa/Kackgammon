@@ -23,8 +23,8 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	map[14] = Tile(5, &player2);
 
 	//set the owner of Tiles for dead pieces
-	map[0].setOwner(&player1);
-	map[27].setOwner(&player2);
+	map[0] = DeadTile(&player1);
+	map[27] = DeadTile(&player2);
 	//set the owner of Tiles for finished pieces
 	map[1].setOwner(&player1);
 	map[26].setOwner(&player2);

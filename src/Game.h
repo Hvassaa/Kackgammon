@@ -1,4 +1,5 @@
 #include "Tile.h"
+#include "DeadTile.h"
 #include "DieCup.h"
 
 class Game
