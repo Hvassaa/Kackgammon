@@ -37,6 +37,10 @@ bool Game::tryMovePiece(int from, int to)
 	if(to == 0 || to == 27) {return false;}
 	// only move if you own pieces at from
 	if(map[from].getOwner() != playerInTurn) {return false;}
+	// check right move direction for player1
+	if(*playerInTurn == player1 && from - to >= 0) {return false;}
+	// check right move direction for player2
+	if(*playerInTurn == player2 && from - to <= 0) {return false;}
 
 	bool tryMove = false;
 
@@ -61,7 +65,24 @@ bool Game::tryMovePiece(int from, int to)
 	if(tryMove)
 	{
 		int needEyes = abs(from - to);
-		return (dieCup.tryUseDieWithEyes(needEyes));
+		bool moveSuccess = (dieCup.tryUseDieWithEyes(needEyes));
+		if(moveSuccess)
+		{
+			map[from].decrementNoOfPieces();
+			map[to].incrementNoOfPieces();
+			map[to].setOwner(playerInTurn);
+		}
+		return moveSuccess;
 	}
 	return false;
+}
+
+Tile Game::getTileAt(int position)
+{
+	return map[position];
+}
+
+DieCup Game::getDieCup() const
+{
+	return dieCup;
 }

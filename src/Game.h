@@ -13,4 +13,6 @@ class Game
 	public:
 		Game();
 		bool tryMovePiece(int from, int to);
+		Tile getTileAt(int position);
+		DieCup getDieCup() const;
 };
