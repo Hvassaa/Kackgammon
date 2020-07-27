@@ -7,6 +7,7 @@ set(PROJECT_HEADERS
 	src/Die.h
 	src/DieCup.h
 	src/Player.h
+	src/BaseTile.h
 	src/Tile.h
 	src/Game.h
 	src/IdPushButton.h
@@ -17,6 +18,7 @@ set(PROJECT_SOURCES
 	src/Die.cpp 
 	src/DieCup.cpp
 	src/Player.cpp 
+	src/BaseTile.cpp 
 	src/Tile.cpp 
 	src/Game.cpp
 	src/IdPushButton.cpp
