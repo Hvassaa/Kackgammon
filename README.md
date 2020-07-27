@@ -21,7 +21,7 @@ The following should be sufficient to build the project (assuming the use of mak
     cmake .
 	make
 
-Which should produce a binary called `Kackagammon` in the root directory of the project
+Which should produce a binary called `Kackgammon` in the root directory of the project
 
 ### Tested versions
 This project has been tested with 
