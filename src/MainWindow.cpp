@@ -13,6 +13,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this))
 {
 	guiFromPos = -1;
 	guiToPos = -1;
+
 	// vertical box layout to hold the rows
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 	mainLayout->setAlignment(Qt::AlignCenter);
@@ -35,16 +36,16 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this))
 		IdPushButton *button = new IdPushButton(QString::number(game.getTileAt(i).getNoOfPieces()), i, this);
 		QObject::connect(button, SIGNAL(emitId(int)), this, SLOT(receivePosition(int)));
 		positionButtons[i] = button;
-		if(i < 14)
-		{
-			topRow->addWidget(button);
-		}
-		else
-		{
-			bottomRow->addWidget(button);
-		}
 	}
-
+	for (int i = 0; i < 14; i++)
+	{
+		topRow->addWidget(positionButtons[i]);
+	}
+	for (int i = 27; i >= 14; i--)
+	{
+		bottomRow->addWidget(positionButtons[i]);
+	}
+	redrawBoard();
 	QWidget::show();
 }
 
@@ -64,6 +65,14 @@ void MainWindow::redrawBoard()
 	for (int i = 0; i < 28; i++)
 	{
 		positionButtons[i]->setText(QString::number(game.getTileAt(i).getNoOfPieces()));
+		if(game.getTileAt(i).getOwner() == nullptr)
+		{
+			positionButtons[i]->setStyleSheet(neutralStyleSheet);
+		}
+		else
+		{
+			positionButtons[i]->setStyleSheet(QString::fromStdString(game.getTileAt(i).getOwner()->getQtStyleSheet()));
+		}
 	}
 }
 
