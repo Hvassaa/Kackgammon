@@ -1,5 +1,8 @@
 #include "Player.h"
 
+#ifndef BASE_TILE
+#define BASE_TILE
+
 class BaseTile
 {
 	protected:
@@ -14,3 +17,5 @@ class BaseTile
 		Player *getOwner();
 		virtual void setOwner(Player *p);
 };
+
+#endif

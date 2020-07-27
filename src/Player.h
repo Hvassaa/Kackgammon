@@ -1,5 +1,8 @@
 #include <string>
 
+#ifndef PLAYER
+#define PLAYER
+
 class Player
 {
 	private:
@@ -12,3 +15,5 @@ class Player
 		std::string getQtStyleSheet();
 		void setQtStyleSheet(std::string newStyle);
 };
+
+#endif
