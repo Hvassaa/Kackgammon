@@ -10,6 +10,7 @@ set(PROJECT_HEADERS
 	src/BaseTile.h
 	src/Tile.h
 	src/DeadTile.h
+	src/FinishTile.h
 	src/Game.h
 	src/IdPushButton.h
 	src/MainWindow.h)
@@ -22,6 +23,7 @@ set(PROJECT_SOURCES
 	src/BaseTile.cpp 
 	src/Tile.cpp 
 	src/DeadTile.cpp 
+	src/FinishTile.cpp 
 	src/Game.cpp
 	src/IdPushButton.cpp
 	src/MainWindow.cpp)
