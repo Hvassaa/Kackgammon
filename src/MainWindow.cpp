@@ -75,6 +75,7 @@ void MainWindow::redrawBoard()
 			positionButtons[i]->setStyleSheet(QString::fromStdString(game.getTileAt(i).getOwner()->getQtStyleSheet()));
 		}
 	}
+	updateDiceLabel();
 }
 
 void MainWindow::receivePosition(int position)
