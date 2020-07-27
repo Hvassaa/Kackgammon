@@ -7,7 +7,7 @@ class Die
 		Die();
 		Die(int fixedEyes);
 		int getEyes() const;
-		bool isUnused();
+		bool isUnused() const;
 		void roll();
 		void use();
 };

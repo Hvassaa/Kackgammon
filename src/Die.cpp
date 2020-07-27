@@ -18,7 +18,7 @@ int Die::getEyes() const
 	return eyes;
 }
 
-bool Die::isUnused()
+bool Die::isUnused() const
 {
 	return unused;
 }

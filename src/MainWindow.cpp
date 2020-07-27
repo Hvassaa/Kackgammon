@@ -56,6 +56,7 @@ void MainWindow::updateDiceLabel()
 	{
 		diceString.append(QString::number(d.getEyes()));
 		diceString.append(" ");
+		diceString.append(d.isUnused() ? "Unused, " : "Used, ");
 	}
 	diceLabel->setText(diceString);
 }
