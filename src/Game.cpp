@@ -4,6 +4,8 @@
 
 Game::Game() : player1(Player("Red")), player2(Player("Black"))
 {
+	player1.setQtStyleSheet("IdPushButton { color : red; }");
+	player2.setQtStyleSheet("IdPushButton { color : blue; }");
 	// set player1 as first player in turn
 	playerInTurn = &player1;
 
