@@ -8,7 +8,7 @@ Backgammon written in C++ and the Qt toolkit
 ## Building
 
 ### Prerequisites
-Generally only the following 3 prerequisites should be required (for building on \*nix):
+Generally only the following 4 prerequisites should be required (for building on \*nix):
 
 1. CMake
 2. make
