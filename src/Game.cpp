@@ -31,6 +31,7 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	//set the owner of Tiles for dead pieces
 	map[0] = DeadTile(&player1);
 	map[27] = DeadTile(&player2);
+	map[27].incrementNoOfPieces();
 	//set the owner of Tiles for finished pieces
 	map[26] = FinishTile(&player1);
 	map[1] = FinishTile(&player2);
@@ -127,18 +128,20 @@ Player Game::getPlayerInTurn() const
 
 bool Game::changeTurn()
 {
-	if(playerInTurn == &player1)
-	{
-		playerInTurn = &player2;
+	bool validChange = !validMoveExists();
+	if(validChange) {
+		if(playerInTurn == &player1)
+		{
+			playerInTurn = &player2;
+		}
+		else
+		{
+			playerInTurn = &player1;
+		}
+		dieCup.roll();
 	}
-	else
-	{
-		playerInTurn = &player1;
-	}
-	dieCup.roll();
-	validMoveExists();
 
-	return false;
+	return validChange;
 }
 
 bool Game::validMoveExists()
