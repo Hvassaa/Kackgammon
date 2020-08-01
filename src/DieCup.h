@@ -7,5 +7,5 @@ class DieCup
 		DieCup();
 		std::vector<Die> dice;
 		void roll();
-		bool tryUseDieWithEyes(int eyes);
+		bool tryUseDieWithEyes(int eyes, bool useEyes = true);
 };
