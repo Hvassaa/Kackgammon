@@ -39,6 +39,12 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 // try to move a piece between from and to, return indicates success
 bool Game::tryMovePiece(int from, int to)
 {
+	// you have to move dead pieces first
+	int player1DeadPos = 0;
+	int player2DeadPos = 27;
+	if(playerInTurn == &player1 && getTileAt(player1DeadPos).getNoOfPieces() > 0 && from != player1DeadPos) {return false;}
+	if(playerInTurn == &player2 && getTileAt(player2DeadPos).getNoOfPieces() > 0 && from != player2DeadPos) {return false;}
+
 	// dont move from the finish-Tiles
 	if(from == 1 || from == 26) {return false;}
 	// dont move to dead Tiles
