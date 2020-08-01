@@ -12,9 +12,10 @@ class Game
 		Player player2;
 		Player *playerInTurn;
 		const int NUM_OF_PIECES = 7;
+		bool validMoveExists();
 	public:
 		Game();
-		bool tryMovePiece(int from, int to);
+		bool tryMovePiece(int from, int to, bool doMove = true);
 		BaseTile getTileAt(int position);
 		DieCup getDieCup() const;
 		Player getPlayerInTurn() const;

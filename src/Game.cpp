@@ -37,7 +37,7 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 }
  
 // try to move a piece between from and to, return indicates success
-bool Game::tryMovePiece(int from, int to)
+bool Game::tryMovePiece(int from, int to, bool doMove)
 {
 	// you have to move dead pieces first
 	int player1DeadPos = 0;
@@ -83,7 +83,7 @@ bool Game::tryMovePiece(int from, int to)
 	{
 		int needEyes = abs(from - to) - movingFromDeadTileBoost;
 		bool moveSuccess = (dieCup.tryUseDieWithEyes(needEyes));
-		if(moveSuccess)
+		if(moveSuccess && doMove)
 		{
 			// kill enemy if present
 			if(map[to].getOwner() != playerInTurn 
@@ -135,6 +135,13 @@ bool Game::changeTurn()
 		playerInTurn = &player1;
 	}
 	dieCup.roll();
+
+	return false;
+}
+
+bool Game::validMoveExists()
+{
+
 
 	return false;
 }
