@@ -48,7 +48,7 @@ bool Game::tryMovePiece(int from, int to)
 	// dont move from the finish-Tiles
 	if(from == 1 || from == 26) {return false;}
 	// dont move to dead Tiles
-	if(to == 0 || to == 27) {return false;}
+	if(to == player1DeadPos || to == player2DeadPos) {return false;}
 	// only move if you own pieces at from
 	if(map[from].getOwner() != playerInTurn) {return false;}
 	// check right move direction for player1
@@ -91,11 +91,11 @@ bool Game::tryMovePiece(int from, int to)
 			{
 				if(playerInTurn == &player1)
 				{
-					map[27].incrementNoOfPieces();
+					map[player2DeadPos].incrementNoOfPieces();
 				}
 				else 
 				{
-					map[0].incrementNoOfPieces();
+					map[player1DeadPos].incrementNoOfPieces();
 				}
 				map[to].decrementNoOfPieces();
 			}
