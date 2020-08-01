@@ -34,6 +34,7 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	//set the owner of Tiles for finished pieces
 	map[26] = FinishTile(&player1);
 	map[1] = FinishTile(&player2);
+	validMoveExists();
 }
  
 // try to move a piece between from and to, return indicates success
@@ -82,7 +83,7 @@ bool Game::tryMovePiece(int from, int to, bool doMove)
 	if(tryMove)
 	{
 		int needEyes = abs(from - to) - movingFromDeadTileBoost;
-		bool moveSuccess = (dieCup.tryUseDieWithEyes(needEyes));
+		bool moveSuccess = (dieCup.tryUseDieWithEyes(needEyes, doMove));
 		if(moveSuccess && doMove)
 		{
 			// kill enemy if present
@@ -135,13 +136,37 @@ bool Game::changeTurn()
 		playerInTurn = &player1;
 	}
 	dieCup.roll();
+	validMoveExists();
 
 	return false;
 }
 
 bool Game::validMoveExists()
 {
-
-
+	int moveMultiplier, start, end;
+	if(playerInTurn == &player1) {
+		moveMultiplier = 1;
+		start = 0;
+		end = 26;
+	}
+	else
+	{
+		moveMultiplier = -1;
+		start = 27;
+		end = 1;
+	}
+	for(int i = start; i != end; i = i + moveMultiplier)
+	{
+		BaseTile t = getTileAt(i);
+		if(t.getOwner() == playerInTurn)
+		{
+			for(Die const &d : dieCup.dice)
+			{
+				int newPos = i + (d.getEyes() * moveMultiplier);
+				//std::cout << "From " << i << ", to " << newPos << (d.isUnused() && tryMovePiece(i, newPos, false)) << std::endl;
+				if(d.isUnused() && tryMovePiece(i, newPos, false)) {return true;}
+			}
+		}
+	}
 	return false;
 }
