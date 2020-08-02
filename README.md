@@ -1,4 +1,4 @@
-# Kackagammon
+# Kackgammon
 Backgammon written in C++ and the Qt toolkit
 <h1 align="center">
   <img src="screenshot.png" alt="Screenshot here!">
