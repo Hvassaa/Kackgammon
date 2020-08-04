@@ -31,11 +31,9 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	//set the owner of Tiles for dead pieces
 	map[0] = DeadTile(&player1);
 	map[27] = DeadTile(&player2);
-	map[27].incrementNoOfPieces();
 	//set the owner of Tiles for finished pieces
 	map[26] = FinishTile(&player1);
 	map[1] = FinishTile(&player2);
-	validMoveExists();
 }
  
 // try to move a piece between from and to, return indicates success
@@ -129,6 +127,7 @@ Player Game::getPlayerInTurn() const
 bool Game::changeTurn()
 {
 	bool validChange = !validMoveExists();
+	//std::cout << "Valid change: " << validChange << std::endl;
 	if(validChange) {
 		if(playerInTurn == &player1)
 		{
@@ -166,7 +165,9 @@ bool Game::validMoveExists()
 			for(Die const &d : dieCup.dice)
 			{
 				int newPos = i + (d.getEyes() * moveMultiplier);
-				//std::cout << "From " << i << ", to " << newPos << (d.isUnused() && tryMovePiece(i, newPos, false)) << std::endl;
+				// if moving from dead, move one furter
+				if(i == 0 || 28) { newPos = newPos + moveMultiplier; }
+				//std::cout << "From " << i << ", to " << newPos << " - " << (d.isUnused() && tryMovePiece(i, newPos, false)) << std::endl;
 				if(d.isUnused() && tryMovePiece(i, newPos, false)) {return true;}
 			}
 		}
