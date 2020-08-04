@@ -15,9 +15,15 @@ Generally only the following 4 prerequisites should be required (for building on
 3. C++ compiler
 4. Qt5 C++ bindings
 
-On Arch Linux this translates to
+For the following distributions, this means:
 
-    pacman -S cmake make gcc qt5-base
+#### Debian
+
+    cmake make g++ qtbase5-dev
+
+#### Arch Linux
+
+    cmake make gcc qt5-base
 
 ### Preparing and building
 The following should be sufficient to build the project (assuming the use of makefiles with CMake):
