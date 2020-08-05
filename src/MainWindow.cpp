@@ -37,8 +37,15 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	nextTurnButton->setFixedWidth(buttonWidth);
 	QObject::connect(nextTurnButton, SIGNAL(released()), this, SLOT(nextTurnProxy()));
 
-	// a row to show the "next" button
+	// label to indicate where you're trying to move from
+	moveFromIndicator = new QLabel("", this);
+	moveFromIndicator->setFixedHeight(labelHeight);
+	moveFromIndicator->setFixedWidth(labelHeight + 60);
+
+	// a row to show the "next" button and moveFromIndicator
 	QHBoxLayout *controlRow = new QHBoxLayout;
+	controlRow->setAlignment(Qt::AlignCenter);
+	controlRow->addWidget(moveFromIndicator);
 	controlRow->addWidget(nextTurnButton);
 
 	// rows to show labels for the tile/button rows
@@ -152,6 +159,7 @@ void MainWindow::receivePosition(int position)
 	if(guiFromPos == -1)
 	{
 		guiFromPos = position;
+		setMoveFromIndicatorText(position);
 	} 
 	else if(guiToPos == -1)
 	{
@@ -160,6 +168,7 @@ void MainWindow::receivePosition(int position)
 		redrawBoard();
 		guiFromPos = -1;
 		guiToPos = -1;
+		setMoveFromIndicatorText(1);
 	}
 }
 
@@ -169,4 +178,10 @@ void MainWindow::nextTurnProxy()
 	guiFromPos = -1;
 	guiToPos = -1;
 	redrawBoard();
+	setMoveFromIndicatorText(1);
+}
+
+void MainWindow::setMoveFromIndicatorText(int realPosition)
+{
+	moveFromIndicator->setText(QString::number(realPosition - 1).prepend("Move from: "));
 }
