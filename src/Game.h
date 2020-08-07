@@ -6,7 +6,7 @@
 class Game
 {
 	private:
-		BaseTile map[28];
+		BaseTile *map[28];
 		DieCup dieCup;
 		Player player1;
 		Player player2;
@@ -16,7 +16,7 @@ class Game
 	public:
 		Game();
 		bool tryMovePiece(int from, int to, bool doMove = true);
-		BaseTile getTileAt(int position);
+		BaseTile* getTileAt(int position);
 		DieCup getDieCup() const;
 		Player getPlayerInTurn() const;
 		bool changeTurn();

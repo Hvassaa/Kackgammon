@@ -108,7 +108,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 
 	for (int i = 0; i < 28; i++)
 	{
-		IdPushButton *button = new IdPushButton(QString::number(game.getTileAt(i).getNoOfPieces()), i, this);
+		IdPushButton *button = new IdPushButton(QString::number(game.getTileAt(i)->getNoOfPieces()), i, this);
 		button->setFixedHeight(buttonHeight);
 		button->setFixedWidth(buttonWidth);
 		QObject::connect(button, SIGNAL(emitId(int)), this, SLOT(receivePosition(int)));
@@ -143,14 +143,14 @@ void MainWindow::redrawBoard()
 {
 	for (int i = 0; i < 28; i++)
 	{
-		positionButtons[i]->setText(QString::number(game.getTileAt(i).getNoOfPieces()));
-		if(game.getTileAt(i).getOwner() == nullptr)
+		positionButtons[i]->setText(QString::number(game.getTileAt(i)->getNoOfPieces()));
+		if(game.getTileAt(i)->getOwner() == nullptr)
 		{
 			positionButtons[i]->setStyleSheet(neutralStyleSheet);
 		}
 		else
 		{
-			positionButtons[i]->setStyleSheet(QString::fromStdString(game.getTileAt(i).getOwner()->getQtStyleSheet()));
+			positionButtons[i]->setStyleSheet(QString::fromStdString(game.getTileAt(i)->getOwner()->getQtStyleSheet()));
 		}
 	}
 	updateDiceLabel();

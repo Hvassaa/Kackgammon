@@ -13,27 +13,27 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	
 	for (int i = 0; i < 28; i++)
 	{
-		map[i] = Tile();
+		map[i] = new Tile();
 	}
 
-	map[2] = Tile(2, &player1);
-	map[25] = Tile(2, &player2);
+	map[2] = new Tile(2, &player1);
+	map[25] = new Tile(2, &player2);
 
-	map[20] = Tile(5, &player1);
-	map[7] = Tile(5, &player2);
+	map[20] = new Tile(5, &player1);
+	map[7] = new Tile(5, &player2);
 
-	map[18] = Tile(3, &player1);
-	map[9] = Tile(3, &player2);
+	map[18] = new Tile(3, &player1);
+	map[9] = new Tile(3, &player2);
 
-	map[13] = Tile(5, &player1);
-	map[14] = Tile(5, &player2);
+	map[13] = new Tile(5, &player1);
+	map[14] = new Tile(5, &player2);
 
 	//set the owner of Tiles for dead pieces
-	map[0] = DeadTile(&player1);
-	map[27] = DeadTile(&player2);
+	map[0] = new DeadTile(&player1);
+	map[27] = new DeadTile(&player2);
 	//set the owner of Tiles for finished pieces
-	map[26] = FinishTile(&player1);
-	map[1] = FinishTile(&player2);
+	map[26] = new FinishTile(&player1);
+	map[1] = new FinishTile(&player2);
 }
  
 // try to move a piece between from and to, return indicates success
@@ -42,15 +42,15 @@ bool Game::tryMovePiece(int from, int to, bool doMove)
 	// you have to move dead pieces first
 	int player1DeadPos = 0;
 	int player2DeadPos = 27;
-	if(playerInTurn == &player1 && getTileAt(player1DeadPos).getNoOfPieces() > 0 && from != player1DeadPos) {return false;}
-	if(playerInTurn == &player2 && getTileAt(player2DeadPos).getNoOfPieces() > 0 && from != player2DeadPos) {return false;}
+	if(playerInTurn == &player1 && getTileAt(player1DeadPos)->getNoOfPieces() > 0 && from != player1DeadPos) {return false;}
+	if(playerInTurn == &player2 && getTileAt(player2DeadPos)->getNoOfPieces() > 0 && from != player2DeadPos) {return false;}
 
 	// dont move from the finish-Tiles
 	if(from == 1 || from == 26) {return false;}
 	// dont move to dead Tiles
 	if(to == player1DeadPos || to == player2DeadPos) {return false;}
 	// only move if you own pieces at from
-	if(map[from].getOwner() != playerInTurn) {return false;}
+	if(map[from]->getOwner() != playerInTurn) {return false;}
 	// check right move direction for player1
 	if(*playerInTurn == player1 && from - to >= 0) {return false;}
 	// check right move direction for player2
@@ -62,19 +62,19 @@ bool Game::tryMovePiece(int from, int to, bool doMove)
 	int movingFromDeadTileBoost = (from == 0 || from == 27) ? 1 : 0;
 
 	// if to is empty, try move
-	if(map[to].getOwner() == nullptr)
+	if(map[to]->getOwner() == nullptr)
 	{
 		tryMove = true;
 	}
 	// if to is owned by player in turn, try move
-	else if(map[to].getOwner() == playerInTurn)
+	else if(map[to]->getOwner() == playerInTurn)
 	{
 		tryMove = true;
 	}
 	// if to is owned by the other player,
 	// try move only if there is only 1 piece
-	else if(map[to].getOwner() != playerInTurn 
-			&& map[to].getNoOfPieces() == 1)
+	else if(map[to]->getOwner() != playerInTurn 
+			&& map[to]->getNoOfPieces() == 1)
 	{
 		tryMove = true;
 	}
@@ -86,30 +86,30 @@ bool Game::tryMovePiece(int from, int to, bool doMove)
 		if(moveSuccess && doMove)
 		{
 			// kill enemy if present
-			if(map[to].getOwner() != playerInTurn 
-				&& map[to].getNoOfPieces() == 1)
+			if(map[to]->getOwner() != playerInTurn 
+				&& map[to]->getNoOfPieces() == 1)
 			{
 				if(playerInTurn == &player1)
 				{
-					map[player2DeadPos].incrementNoOfPieces();
+					map[player2DeadPos]->incrementNoOfPieces();
 				}
 				else 
 				{
-					map[player1DeadPos].incrementNoOfPieces();
+					map[player1DeadPos]->incrementNoOfPieces();
 				}
-				map[to].decrementNoOfPieces();
+				map[to]->decrementNoOfPieces();
 			}
 
-			map[from].decrementNoOfPieces();
-			map[to].incrementNoOfPieces();
-			map[to].setOwner(playerInTurn);
+			map[from]->decrementNoOfPieces();
+			map[to]->incrementNoOfPieces();
+			map[to]->setOwner(playerInTurn);
 		}
 		return moveSuccess;
 	}
 	return false;
 }
 
-BaseTile Game::getTileAt(int position)
+BaseTile* Game::getTileAt(int position)
 {
 	return map[position];
 }
@@ -159,8 +159,8 @@ bool Game::validMoveExists()
 	}
 	for(int i = start; i != end; i = i + moveMultiplier)
 	{
-		BaseTile t = getTileAt(i);
-		if(t.getOwner() == playerInTurn)
+		BaseTile *t = getTileAt(i);
+		if(t->getOwner() == playerInTurn)
 		{
 			for(Die const &d : dieCup.dice)
 			{
