@@ -32,7 +32,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	statusRow->addWidget(playerInTurnLabel);
 
 	// button to go to next player
-	QPushButton *nextTurnButton = new QPushButton("Next", this);
+	QPushButton *nextTurnButton = new QPushButton("Change\nturn", this);
 	nextTurnButton->setFixedHeight(buttonHeight);
 	nextTurnButton->setFixedWidth(buttonWidth);
 	QObject::connect(nextTurnButton, SIGNAL(released()), this, SLOT(nextTurnProxy()));
@@ -41,11 +41,13 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	moveFromIndicator = new QLabel("", this);
 	moveFromIndicator->setFixedHeight(labelHeight);
 	moveFromIndicator->setFixedWidth(labelHeight + 60);
+	QHBoxLayout *moveRow = new QHBoxLayout(this);
+	moveRow->setAlignment(Qt::AlignCenter);
+	moveRow->addWidget(moveFromIndicator);
 
 	// a row to show the "next" button and moveFromIndicator
 	QHBoxLayout *controlRow = new QHBoxLayout;
 	controlRow->setAlignment(Qt::AlignCenter);
-	controlRow->addWidget(moveFromIndicator);
 	controlRow->addWidget(nextTurnButton);
 
 	// rows to show labels for the tile/button rows
@@ -98,6 +100,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 
 	mainLayout->addLayout(statusRow);
 	mainLayout->addLayout(controlRow);
+	mainLayout->addLayout(moveRow);
 	mainLayout->addLayout(labelRow1);
 	mainLayout->addLayout(topRow);
 	mainLayout->addLayout(bottomRow);
@@ -121,6 +124,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	}
 	redrawBoard();
 	QWidget::show();
+	setMoveFromIndicatorText(1);
 }
 
 void MainWindow::updateDiceLabel()
