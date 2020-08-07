@@ -15,6 +15,7 @@ class Game
 		bool validMoveExists();
 	public:
 		Game();
+		~Game();
 		bool tryMovePiece(int from, int to, bool doMove = true);
 		BaseTile* getTileAt(int position);
 		DieCup getDieCup() const;

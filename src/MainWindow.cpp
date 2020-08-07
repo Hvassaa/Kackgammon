@@ -127,6 +127,11 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	setMoveFromIndicatorText(1);
 }
 
+MainWindow::~MainWindow() 
+{
+	delete &game;
+}
+
 void MainWindow::updateDiceLabel()
 {
 	QString diceString = "";

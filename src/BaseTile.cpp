@@ -6,6 +6,10 @@ BaseTile::BaseTile()
 	owner = nullptr;
 }
 
+BaseTile::~BaseTile()
+{
+}
+
 BaseTile::BaseTile(int noOfStartingPieces, Player *p)
 {
 	noOfPieces = noOfStartingPieces;

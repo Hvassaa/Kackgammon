@@ -7,6 +7,7 @@ class MainWindow : public QWidget
 	Q_OBJECT
 	public:
 		MainWindow();
+		~MainWindow();
 		void redrawBoard();
 		void getMovePositionsFromInput(int pos);
 	private:

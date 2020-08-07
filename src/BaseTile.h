@@ -10,6 +10,7 @@ class BaseTile
 		Player *owner;
 	public:
 		BaseTile();
+		virtual ~BaseTile();
 		BaseTile(int noOfStartingPieces, Player *p);
 		int getNoOfPieces();
 		virtual void decrementNoOfPieces();
