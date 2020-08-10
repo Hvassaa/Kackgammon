@@ -71,7 +71,7 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 
 Game::~Game()
 {
-	delete[] *map;
+	//delete[] *map;
 }
  
 // try to move a piece between from and to, return indicates success

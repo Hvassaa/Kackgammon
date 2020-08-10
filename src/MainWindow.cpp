@@ -129,7 +129,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 
 MainWindow::~MainWindow() 
 {
-	delete &game;
+	//delete &game;
 }
 
 void MainWindow::updateDiceLabel()
