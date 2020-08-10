@@ -164,7 +164,7 @@ void MainWindow::redrawBoard()
 
 void MainWindow::receivePosition(int position)
 {
-	std::cout << "BUTTON " << position << std::endl;
+	//std::cout << "BUTTON " << position << std::endl;
 	if(guiFromPos == -1)
 	{
 		guiFromPos = position;
