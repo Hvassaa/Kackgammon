@@ -10,6 +10,7 @@
 #include <qobjectdefs.h>
 #include <qpushbutton.h>
 #include <qwidget.h>
+#include <QMessageBox>
 
 MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(new QLabel("", this)), statusLabel(new QLabel("", this))
 {
@@ -185,7 +186,12 @@ void MainWindow::receivePosition(int position)
 		{
 			statusLabel->setText("Invalid move!");
 		}
-		redrawBoard();
+		else
+		{
+			redrawBoard();
+			checkForWinner();
+
+		}
 		guiFromPos = -1;
 		guiToPos = -1;
 		setMoveFromIndicatorText(1);
@@ -211,4 +217,34 @@ void MainWindow::nextTurnProxy()
 void MainWindow::setMoveFromIndicatorText(int realPosition)
 {
 	moveFromIndicator->setText(QString::number(realPosition - 1).prepend("Move from: "));
+}
+
+void MainWindow::checkForWinner()
+{
+	if(game.getWinner() != nullptr)
+	{
+		QMessageBox winnerWindow(this);
+		winnerWindow.setStandardButtons(QMessageBox::Reset|QMessageBox::Close);
+		winnerWindow.setDefaultButton(QMessageBox::Reset);
+		winnerWindow.setText(QString::fromStdString(game.getWinner()->getPlayerColor()).append(" Wins! Reset game or close?"));
+		int ret = winnerWindow.exec();
+		
+		switch (ret)
+		{
+			case QMessageBox::Reset:
+				resetGame();
+				break;
+			case QMessageBox::Close:
+				emit quitApp();
+				break;
+			default:
+				break;
+		}
+	}
+}
+
+void MainWindow::resetGame()
+{
+	game.resetGame(true);
+	redrawBoard();
 }

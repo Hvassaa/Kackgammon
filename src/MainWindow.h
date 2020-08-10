@@ -23,7 +23,11 @@ class MainWindow : public QWidget
 		Game game;
 		void updateDiceLabel();
 		void setMoveFromIndicatorText(int realPosition);
+		void checkForWinner();
+		void resetGame();
 	public slots:
 		void receivePosition(int position);
 		void nextTurnProxy();
+	signals:
+		void quitApp();
 };
