@@ -15,6 +15,7 @@ class Game
 		bool validMoveExists();
 		bool currentPlayerCanFinishPieces();
 		bool tryHomeMove(int from, int to, int neededEyes);
+		void deleteMap();
 	public:
 		Game();
 		~Game();
@@ -24,4 +25,5 @@ class Game
 		Player getPlayerInTurn() const;
 		bool changeTurn();
 		Player *getWinner();
+		void resetGame(bool doDelete);
 };
