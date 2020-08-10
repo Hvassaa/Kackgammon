@@ -16,6 +16,7 @@ class MainWindow : public QWidget
 		QLabel *diceLabel;
 		QLabel *playerInTurnLabel;
 		QLabel *moveFromIndicator;
+		QLabel *statusLabel;
 		QString redStyleSheet = "IdPushButton { color : red; }";
 		QString blackStyleSheet = "IdPushButton { color : blue; }";
 		QString neutralStyleSheet = "IdPushButton { color : black; }";

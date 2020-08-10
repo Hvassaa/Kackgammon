@@ -11,7 +11,7 @@
 #include <qpushbutton.h>
 #include <qwidget.h>
 
-MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(new QLabel("", this))
+MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(new QLabel("", this)), statusLabel(new QLabel("", this))
 {
 	const int buttonHeight = 60;
 	const int buttonWidth = buttonHeight;
@@ -45,7 +45,12 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	moveRow->setAlignment(Qt::AlignCenter);
 	moveRow->addWidget(moveFromIndicator);
 
-	// a row to show the "next" button and moveFromIndicator
+	// label and row to show messages
+	QHBoxLayout *messageRow = new QHBoxLayout(this);
+	messageRow->addWidget(statusLabel);
+	messageRow->setAlignment(Qt::AlignCenter);
+
+	// a row to show the "next" button 
 	QHBoxLayout *controlRow = new QHBoxLayout;
 	controlRow->setAlignment(Qt::AlignCenter);
 	controlRow->addWidget(nextTurnButton);
@@ -100,6 +105,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 
 	mainLayout->addLayout(statusRow);
 	mainLayout->addLayout(controlRow);
+	mainLayout->addLayout(messageRow);
 	mainLayout->addLayout(moveRow);
 	mainLayout->addLayout(labelRow1);
 	mainLayout->addLayout(topRow);
@@ -169,11 +175,15 @@ void MainWindow::receivePosition(int position)
 	{
 		guiFromPos = position;
 		setMoveFromIndicatorText(position);
+		statusLabel->setText("");
 	} 
 	else if(guiToPos == -1)
 	{
 		guiToPos = position;
-		game.tryMovePiece(guiFromPos, guiToPos);
+		if(!game.tryMovePiece(guiFromPos, guiToPos))
+		{
+			statusLabel->setText("Invalid move!");
+		}
 		redrawBoard();
 		guiFromPos = -1;
 		guiToPos = -1;
@@ -183,10 +193,17 @@ void MainWindow::receivePosition(int position)
 
 void MainWindow::nextTurnProxy()
 {
-	game.changeTurn();
+	if(game.changeTurn())
+	{
+		statusLabel->setText("");
+		redrawBoard();
+	}
+	else
+	{
+		statusLabel->setText("Failed, valid move exists!");
+	}
 	guiFromPos = -1;
 	guiToPos = -1;
-	redrawBoard();
 	setMoveFromIndicatorText(1);
 }
 
