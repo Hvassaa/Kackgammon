@@ -23,4 +23,5 @@ class Game
 		DieCup getDieCup() const;
 		Player getPlayerInTurn() const;
 		bool changeTurn();
+		Player *getWinner();
 };

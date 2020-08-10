@@ -282,3 +282,24 @@ bool Game::currentPlayerCanFinishPieces()
 
 	return piecesHome == 15;
 }
+
+/*
+ * Return the winner of the Game
+ * If there currently is not winner,
+ * a nullptr is returned
+ */
+Player *Game::getWinner()
+{
+	if(getTileAt(1)->getNoOfPieces() == 15)
+	{
+		return &player1;
+	}
+	else if (getTileAt(26)->getNoOfPieces() == 15)
+	{
+		return &player2;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
