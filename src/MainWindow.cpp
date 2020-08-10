@@ -24,6 +24,7 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	// vertical box layout to hold the rows
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 	mainLayout->setAlignment(Qt::AlignCenter);
+	this->setLayout(mainLayout);
 
 	// a row to show status, player, dice etc.
 	QHBoxLayout *statusRow = new QHBoxLayout;
@@ -41,12 +42,12 @@ MainWindow::MainWindow() : diceLabel(new QLabel("", this)), playerInTurnLabel(ne
 	moveFromIndicator = new QLabel("", this);
 	moveFromIndicator->setFixedHeight(labelHeight);
 	moveFromIndicator->setFixedWidth(labelHeight + 60);
-	QHBoxLayout *moveRow = new QHBoxLayout(this);
+	QHBoxLayout *moveRow = new QHBoxLayout;
 	moveRow->setAlignment(Qt::AlignCenter);
 	moveRow->addWidget(moveFromIndicator);
 
 	// label and row to show messages
-	QHBoxLayout *messageRow = new QHBoxLayout(this);
+	QHBoxLayout *messageRow = new QHBoxLayout;
 	messageRow->addWidget(statusLabel);
 	messageRow->setAlignment(Qt::AlignCenter);
 
