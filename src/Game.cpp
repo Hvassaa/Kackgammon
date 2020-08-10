@@ -241,9 +241,9 @@ bool Game::validMoveExists()
 		{
 			for(Die const &d : dieCup.dice)
 			{
-				int newPos = i + (d.getEyes() * moveMultiplier);
 				// if moving from dead, move one furter
-				if(i == 0 || 28) { newPos = newPos + moveMultiplier; }
+				int deadBoost = (i == 0 || i == 27) ? 1 : 0;
+				int newPos = i + ( (d.getEyes() + deadBoost) * moveMultiplier);
 				//std::cout << "From " << i << ", to " << newPos << " - " << (d.isUnused() && tryMovePiece(i, newPos, false)) << std::endl;
 				if(d.isUnused() && tryMovePiece(i, newPos, false)) {return true;}
 			}
