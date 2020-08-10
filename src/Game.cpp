@@ -40,7 +40,27 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	map[13] = new Tile(5, &player1);
 	map[14] = new Tile(5, &player2);
 
-	
+	/* TESTING POSITIONS
+	map[2] = new Tile(2, &player1);
+	map[3] = new Tile(2, &player1);
+	map[4] = new Tile(2, &player1);
+	map[5] = new Tile(2, &player1);
+	map[6] = new Tile(2, &player1);
+	map[7] = new Tile(2, &player1);
+
+	map[8] = new Tile(15, &player2);
+	map[25] = new Tile(15, &player1);
+
+	map[20] = new Tile();
+
+	map[18] = new Tile();
+	map[9] = new Tile();
+
+	map[13] = new Tile();
+	map[14] = new Tile();
+	*/
+
+
 	//set the owner of Tiles for dead pieces
 	map[0] = new DeadTile(&player1);
 	map[27] = new DeadTile(&player2);
@@ -217,7 +237,7 @@ bool Game::validMoveExists()
 	for(int i = start; i != end; i = i + moveMultiplier)
 	{
 		BaseTile *t = getTileAt(i);
-		if(t->getOwner() == playerInTurn)
+		if(t->getOwner() == playerInTurn && t->getNoOfPieces() > 0)
 		{
 			for(Die const &d : dieCup.dice)
 			{
