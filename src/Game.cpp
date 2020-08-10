@@ -253,11 +253,13 @@ Player *Game::getWinner()
 	}
 }
 
-void Game::resetGame(bool doDelete) 
+void Game::resetGame(bool actualReset) 
 {
-	if(doDelete)
+	if(actualReset)
 	{
 		deleteMap();
+		// roll the dieCup
+		dieCup.roll();
 	}
 	// set player1 as first player in turn
 	playerInTurn = &player1;
@@ -298,4 +300,5 @@ void Game::resetGame(bool doDelete)
 	//set the owner of Tiles for finished pieces
 	map[26] = new FinishTile(&player1);
 	map[1] = new FinishTile(&player2);
+
 }

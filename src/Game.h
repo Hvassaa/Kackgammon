@@ -25,5 +25,5 @@ class Game
 		Player getPlayerInTurn() const;
 		bool changeTurn();
 		Player *getWinner();
-		void resetGame(bool doDelete);
+		void resetGame(bool actualReset);
 };
