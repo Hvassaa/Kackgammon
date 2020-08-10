@@ -40,6 +40,7 @@ Game::Game() : player1(Player("Red")), player2(Player("Black"))
 	map[13] = new Tile(5, &player1);
 	map[14] = new Tile(5, &player2);
 
+	
 	//set the owner of Tiles for dead pieces
 	map[0] = new DeadTile(&player1);
 	map[27] = new DeadTile(&player2);
@@ -56,6 +57,7 @@ Game::~Game()
 // try to move a piece between from and to, return indicates success
 bool Game::tryMovePiece(int from, int to, bool doMove)
 {
+	if(to < 0 || to > 27) {return false;}
 	// you have to move dead pieces first
 	int player1DeadPos = 0;
 	int player2DeadPos = 27;
@@ -72,6 +74,19 @@ bool Game::tryMovePiece(int from, int to, bool doMove)
 	if(*playerInTurn == player1 && from - to >= 0) {return false;}
 	// check right move direction for player2
 	if(*playerInTurn == player2 && from - to <= 0) {return false;}
+	// check that you can finish pieces
+	bool isFinishingPiece = false;
+	if( (to == 1 || to == 26) )
+	{
+		if(currentPlayerCanFinishPieces())
+		{
+			isFinishingPiece = true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	bool tryMove = false;
 	// this will be subtracted to the from-to difference
@@ -98,7 +113,32 @@ bool Game::tryMovePiece(int from, int to, bool doMove)
 
 	if(tryMove)
 	{
+		// too advanced method to finish pieces with higher die-rolls
+		// then the exact match
 		int needEyes = abs(from - to) - movingFromDeadTileBoost;
+		if(isFinishingPiece)
+		{
+			int endHomePos = (playerInTurn == &player1) ? 19 : 8; 
+			int moveMultiplier = (playerInTurn == &player1) ? -1 : 1; 
+
+			int lowestUseableEyes = 7;
+			for (Die const &d : dieCup.dice)
+			{
+				int dEyes = d.getEyes();
+				if (dEyes > needEyes && dEyes < lowestUseableEyes && d.isUnused())
+				{
+					bool noPiecesAbove = true;
+					for (int i = from + moveMultiplier; i != endHomePos; i = i + moveMultiplier)
+					{
+						if(getTileAt(i)->getOwner() == playerInTurn && getTileAt(i)->getNoOfPieces() > 0) {noPiecesAbove = false;}
+					}
+					if(noPiecesAbove) {lowestUseableEyes = dEyes;}
+				}
+			}
+			if(lowestUseableEyes != 7) {
+				needEyes = lowestUseableEyes;
+			}
+		}
 		bool moveSuccess = (dieCup.tryUseDieWithEyes(needEyes, doMove));
 		if(moveSuccess && doMove)
 		{
@@ -190,4 +230,35 @@ bool Game::validMoveExists()
 		}
 	}
 	return false;
+}
+
+bool Game::currentPlayerCanFinishPieces()
+{
+	int start, end, finishPosition;
+	
+	if(playerInTurn == &player1)
+	{
+		start = 20;
+		end = 26;
+		finishPosition = 26;
+	}
+	else
+	{
+		start = 2;
+		end = 8;
+		finishPosition = 1;
+	}
+
+	int piecesHome = 0;
+	for (int i = start; i != end; i++)
+	{
+		if(getTileAt(i)->getOwner() == playerInTurn)
+		{
+			piecesHome += getTileAt(i)->getNoOfPieces();
+		}
+	}
+	piecesHome += getTileAt(finishPosition)->getNoOfPieces();
+	std::cout << piecesHome << std::endl;
+
+	return piecesHome == 15;
 }

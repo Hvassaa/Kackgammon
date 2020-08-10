@@ -13,6 +13,8 @@ class Game
 		Player *playerInTurn;
 		const int NUM_OF_PIECES = 7;
 		bool validMoveExists();
+		bool currentPlayerCanFinishPieces();
+		bool tryHomeMove(int from, int to, int neededEyes);
 	public:
 		Game();
 		~Game();
